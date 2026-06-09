@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>简账 Finn — 极简记账</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--green:#1B5E20;--green-light:#E8F5E9;--text:#1a1a1a;--text-2:#555;--text-3:#999;--border:#e5e5e5;--bg:#fff;--bg-2:#f8f8f6;--radius:12px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:var(--text);background:var(--bg);line-height:1.6}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
+@keyframes lineGrow{from{width:0}to{width:60px}}
+@keyframes pulse{0%,100%{transform:translateY(-2px)}50%{transform:translateY(-5px)}}
+.fade-up{opacity:0;animation:fadeUp 0.7s cubic-bezier(.22,.68,0,1.2) forwards;animation-play-state:paused}
+.scale-in{opacity:0;animation:scaleIn 0.6s cubic-bezier(.22,.68,0,1.2) forwards;animation-play-state:paused}
+.d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}.d4{animation-delay:.55s}.d5{animation-delay:.7s}.d6{animation-delay:.85s}.d7{animation-delay:1s}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-icon{width:36px;height:36px;border-radius:9px;overflow:hidden;flex-shrink:0}
+.nav-icon img{width:36px;height:36px;display:block}
+.nav-name{font-size:15px;font-weight:600}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--text-2);text-decoration:none}
+.nav-links a:hover{color:var(--text)}
+.hero{padding:96px 48px 80px;text-align:center}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--green);text-transform:uppercase;margin-bottom:20px;background:var(--green-light);padding:5px 16px;border-radius:999px}
+.hero h1{font-size:52px;font-weight:700;color:var(--text);line-height:1.15;margin-bottom:20px;letter-spacing:-.5px}
+.hero h1 em{font-style:normal;color:var(--green)}
+.accent-line{height:3px;background:var(--green);border-radius:2px;width:0;margin:0 auto 28px;animation:lineGrow .8s .5s cubic-bezier(.22,.68,0,1.2) forwards}
+.hero-sub{font-size:17px;color:var(--text-2);line-height:1.75;max-width:480px;margin:0 auto 48px}
+.dl-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;transition:transform .15s,background .15s;border:1px solid var(--border);background:var(--bg);color:var(--text)}
+.btn:hover{background:var(--bg-2);transform:translateY(-1px)}
+.btn.primary{background:#1a1a1a;color:#fff;border-color:transparent;animation:pulse 2.5s 1.5s ease-in-out infinite}
+.btn.primary:hover{background:#111}
+.btn svg{width:20px;height:20px;flex-shrink:0}
+.features{padding:80px 48px;background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.sec-head{text-align:center;margin-bottom:52px}
+.sec-label{font-size:12px;font-weight:600;letter-spacing:.1em;color:var(--text-3);text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-size:30px;font-weight:700}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;max-width:900px;margin:0 auto}
+.feat-card{background:var(--bg);border:1px solid var(--border);border-radius:16px;padding:28px 24px;transition:transform .2s,box-shadow .2s}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 12px 32px rgba(0,0,0,.07)}
+.feat-icon{width:46px;height:46px;background:var(--green-light);border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:18px}
+.feat-icon svg{width:24px;height:24px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.feat-card h3{font-size:15px;font-weight:600;margin-bottom:8px}
+.feat-card p{font-size:13px;color:var(--text-2);line-height:1.65}
+.soon{font-size:11px;color:var(--text-3);margin-top:6px}
+.privacy{padding:64px 48px}
+.privacy-inner{max-width:640px;margin:0 auto;text-align:center}
+.privacy-inner h2{font-size:28px;font-weight:700;margin-bottom:14px}
+.privacy-inner p{font-size:15px;color:var(--text-2);line-height:1.75;margin-bottom:32px}
+.badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:999px;background:var(--bg);border:1px solid var(--border);font-size:13px;color:var(--text-2);transition:transform .15s}
+.badge:hover{transform:scale(1.04)}
+.badge svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cta{padding:80px 48px;background:var(--bg-2);border-top:1px solid var(--border);text-align:center}
+.cta h2{font-size:32px;font-weight:700;margin-bottom:14px}
+.cta p{font-size:15px;color:var(--text-2);margin-bottom:40px}
+footer{padding:28px 48px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-left{font-size:13px;color:var(--text-3)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:13px;color:var(--text-2);text-decoration:none}
+.footer-links a:hover{color:var(--text)}
+</style>
+</head>
+<body>
+
+<nav class="fade-up d1">
+  <div class="nav-logo">
+    <div class="nav-icon"><img src="data:image/png;base64,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" alt="简账图标"></div>
+    <span class="nav-name">简账 Finn</span>
+  </div>
+  <div class="nav-links">
+    <a href="#features">功能</a>
+    <a href="#privacy">隐私</a>
+    <a href="#download">下载</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow fade-up d1">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+    WuLe Labs 出品
+  </div>
+  <h1 class="fade-up d2">记账，<em>本该如此简单</em></h1>
+  <div class="accent-line"></div>
+  <p class="hero-sub fade-up d3">无广告，完全免费。所有数据存储在你的设备上，不上传，不追踪，不打扰。</p>
+  <div class="dl-row fade-up d4" id="download">
+    <a href="#" class="btn primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+      HarmonyOS 下载
+    </a>
+    <a href="https://github.com/wulelabs/finn-android/releases/download/v1.0.0/Finn.apk" class="btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><path d="M13 16h.01M17 16h.01"/></svg>
+      Android 下载
+    </a>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="sec-head fade-up d1">
+    <p class="sec-label">功能</p>
+    <p class="sec-title">够用，不多余</p>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card scale-in d2">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+      <h3>快速记账</h3>
+      <p>三步完成一笔记录，收入支出一目了然。</p>
+    </div>
+    <div class="feat-card scale-in d3">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg></div>
+      <h3>支出分析</h3>
+      <p>扇形图展示分类占比，周趋势曲线随时掌握。</p>
+    </div>
+    <div class="feat-card scale-in d4">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+      <h3>连续打卡</h3>
+      <p>记录连续记账天数，养成好习惯。</p>
+    </div>
+    <div class="feat-card scale-in d5">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
+      <h3>月度报告</h3>
+      <p>每月收支总结，导出 CSV 随时备份。</p>
+    </div>
+    <div class="feat-card scale-in d6">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></div>
+      <h3>智能记账</h3>
+      <p>自动识别支付通知，无感完成记账。</p>
+      <p class="soon">Beta · 即将开放</p>
+    </div>
+    <div class="feat-card scale-in d7">
+      <div class="feat-icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></div>
+      <h3>记账提醒</h3>
+      <p>定时提醒，不遗漏每一笔消费。</p>
+    </div>
+  </div>
+</section>
+
+<section class="privacy" id="privacy">
+  <div class="privacy-inner fade-up d1">
+    <h2>你的数据，只属于你</h2>
+    <p>简账不联网存储任何账单数据。所有记录保存在本地设备，卸载即清除。我们不收集，不分析，不出售。</p>
+    <div class="badges">
+      <span class="badge"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9,12 11,14 15,10"/></svg>本地存储</span>
+      <span class="badge"><svg viewBox="0 0 24 24"><line x1="1" y1="1" x2="23" y2="23"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.56 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/></svg>不联网上传</span>
+      <span class="badge"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>无广告</span>
+      <span class="badge"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>完全免费</span>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2 class="fade-up d1">现在就开始记账</h2>
+  <p class="fade-up d2">下载简账，找回对金钱的掌控感。</p>
+  <div class="dl-row fade-up d3">
+    <a href="#" class="btn primary">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+      HarmonyOS 下载
+    </a>
+    <a href="#" class="btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3"/><rect x="9" y="11" width="14" height="10" rx="2"/><path d="M13 16h.01M17 16h.01"/></svg>
+      Android 下载
+    </a>
+  </div>
+</section>
+
+<footer class="fade-up d1">
+  <span class="footer-left">© 2026 WuLe Labs · 简账 Finn</span>
+  <div class="footer-links">
+    <a href="privacy.html">隐私政策</a>
+    <a href="terms.html">用户协议</a>
+    <a href="mailto:wule1337@qq.com">联系我们</a>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.style.animationPlayState = 'running';
+      obs.unobserve(e.target);
+    }
+  });
+}, {threshold: 0.1});
+document.querySelectorAll('.fade-up, .scale-in').forEach(el => {
+  obs.observe(el);
+});
+</script>
+</body>
+</html>
